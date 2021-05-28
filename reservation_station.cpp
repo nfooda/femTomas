@@ -9,6 +9,7 @@ class reservation_station {
         int PC;
         int issue_lat;
         int execute_lat;
+        string inst;
     
     reservation_station() {
         name = "";
@@ -22,6 +23,7 @@ class reservation_station {
         PC = 0;
         issue_lat = 0;
         execute_lat = 0;
+        inst = "";
     }
 
     reservation_station(string Name, int Issue_Lat, int Execute_Lat) {
@@ -36,5 +38,28 @@ class reservation_station {
         PC = 0;
         issue_lat = Issue_Lat;
         execute_lat = Execute_Lat;
+        inst = "";
     }
 };
+
+/*
+class lw_rs : public reservation_station {
+    lw_rs (string Name, int Issue_Lat, int Execute_Lat) : reservation_station( Name,  Issue_Lat,  Execute_Lat) {}
+};
+
+class sw_rs : public reservation_station {
+    sw_rs (string Name, int Issue_Lat, int Execute_Lat) : reservation_station( Name,  Issue_Lat,  Execute_Lat){}
+};
+
+class beq_rs : public reservation_station {
+};
+
+class jalr_rs : public reservation_station {
+};
+
+class add_rs : public reservation_station {
+};
+
+class mull_rs : public reservation_station {
+};
+*/
