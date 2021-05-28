@@ -10,6 +10,7 @@ class reservation_station {
         int issue_lat;
         int execute_lat;
         string inst;
+        int instr_num;
     
     reservation_station() {
         name = "";
@@ -24,6 +25,7 @@ class reservation_station {
         issue_lat = 0;
         execute_lat = 0;
         inst = "";
+        instr_num = -1;
     }
 
     reservation_station(string Name, int Issue_Lat, int Execute_Lat) {
@@ -39,6 +41,14 @@ class reservation_station {
         issue_lat = Issue_Lat;
         execute_lat = Execute_Lat;
         inst = "";
+        instr_num = -1;
+    }
+
+
+
+    bool operator <(const  reservation_station& b) const
+    {
+        return instr_num < b.instr_num;
     }
 };
 
