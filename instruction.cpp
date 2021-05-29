@@ -52,6 +52,9 @@ class instruction {
                 Inst.erase(Inst.begin() + i);
             if (Inst[i] == '(')
                 Inst.replace(i, 1, " ");
+            if (inst[i] == 'R' && inst[i+1] != ' ')
+                Inst.erase(Inst.begin() + i);
+
         }
 
         stringstream str (Inst);

@@ -32,10 +32,12 @@ bool RET_flag = false;
 
 int before_jump_address;
 
+const int ZERO = 0;
+
 //main functions
-void issue(vector<instruction>& Instructions, vector<vector<reservation_station>>& Reservation_Stations, vector<Register>& Registers_Status, vector<int>& Regs, queue<string>& LoadStoreQueue);
-void execute(vector<instruction>& Instructions, vector<vector<reservation_station>>& Reservation_Stations, vector<Register>& Registers_Status, vector<int>& Regs, queue<string>& LoadStoreQueue);
-void write(vector<instruction>& Instructions, vector<vector<reservation_station>>& Reservation_Stations, vector<Register>& Registers_Status, vector<int>& Regs, queue<string>& LoadStoreQueue);
+void ISSUE(vector<instruction>& Instructions, vector<vector<reservation_station>>& Reservation_Stations, vector<Register>& Registers_Status, vector<int>& Regs, queue<string>& LoadStoreQueue);
+void EXECUTE(vector<instruction>& Instructions, vector<vector<reservation_station>>& Reservation_Stations, vector<Register>& Registers_Status, vector<int>& Regs, queue<string>& LoadStoreQueue);
+void WRITE(vector<instruction>& Instructions, vector<vector<reservation_station>>& Reservation_Stations, vector<Register>& Registers_Status, vector<int>& Regs, queue<string>& LoadStoreQueue);
 
 void print(vector<instruction>& Instructions);
 
@@ -117,10 +119,11 @@ main () {
     }
 
     // initialize register file
-    vector<int> Regs = {0,1,2,3,4,5,6,7};
+    vector<int> Regs = {ZERO,0,0,0,0,0,0,0};
 
     queue<string> LoadStoreQueue;
 
+    bool empty_flag ;
 
     do{
         clk++; 
@@ -129,9 +132,15 @@ main () {
 		EXECUTE(Instructions,Reservation_Stations,Registers_Status,Regs, LoadStoreQueue);
 		WRITE(Instructions,Reservation_Stations,Registers_Status,Regs, LoadStoreQueue);
 
-       
+        empty_flag =true;
+       for (int i = 0; i < Reservation_Stations.size(); i++)
+            for (int j = 0; j < Reservation_Stations[i].size(); j++) 
+                if(Reservation_Stations[i][j].busy)
+                    empty_flag = false;
+
+
         done = false;
-        if(num_writbacks == Instructions.size())
+        if(instr_issue > Instructions.size() && empty_flag)
             done = true;
         cout << endl;
 	}while(!done);
@@ -143,13 +152,6 @@ main () {
 
 }
 
-/*
-while( num_writbacks < Instructions.size() ) 
-clk++;
-ISSUE
-Execute
-Write
-*/
 
 void ISSUE(vector<instruction>& Instructions, vector<vector<reservation_station>>& Reservation_Stations, vector<Register>& Registers_Status, vector<int>& Regs, queue<string>& LoadStoreQueue){
     string Op = Instructions[instr_issue].type;
@@ -609,7 +611,7 @@ void WRITE (vector<instruction>& Instructions, vector<vector<reservation_station
                 }
             }
             //Regs[Instructions[inst].rd] = mull(Regs[Instructions[inst].rs1], Regs[Instructions[inst].rs2]);
-            Regs[Instructions[inst].rd] = Regs[Instructions[inst].rs1]* Regs[Instructions[inst].rs2];
+            Regs[Instructions[inst].rd] = (Regs[Instructions[inst].rs1]* Regs[Instructions[inst].rs2])&(65535);
         }
 
         if(Op == "MULH") {
@@ -631,7 +633,9 @@ void WRITE (vector<instruction>& Instructions, vector<vector<reservation_station
                 }
             }
             //Regs[Instructions[inst].rd] = mulh(Regs[Instructions[inst].rs1], Regs[Instructions[inst].rs2]);
-            Regs[Instructions[inst].rd] = Regs[Instructions[inst].rs1]* Regs[Instructions[inst].rs2];
+            Regs[Instructions[inst].rd] = (Regs[Instructions[inst].rs1]* Regs[Instructions[inst].rs2])>>16;
+
+            //16 bits = 65535
         }
 
         if(Op == "LW") {
