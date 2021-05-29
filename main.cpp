@@ -77,29 +77,36 @@ main () {
     Reservation_Stations.push_back(ADD_units);  // 4
     Reservation_Stations.push_back(MULL_units); // 5
 
+    int count_units=1 ;
     for (int i = 0; i < Num_LW_RS; i++){
-        reservation_station LW("LW" + to_string(i + 1), 3,1);
+        reservation_station LW("LW" + to_string(i + 1), 3,1, count_units);
         Reservation_Stations[0].push_back(LW);
+        count_units++;
     }
     for (int i = 0; i < Num_SW_RS; i++){
-        reservation_station SW("SW" + to_string(i+1), 3,1);
+        reservation_station SW("SW" + to_string(i+1), 3,1, count_units);
         Reservation_Stations[1].push_back(SW);
+        count_units++;
     }
     for (int i = 0; i < Num_BEQ_RS; i++){
-        reservation_station BEQ("BEQ" + to_string(i+1), 1,1);
+        reservation_station BEQ("BEQ" + to_string(i+1), 1,1, count_units);
         Reservation_Stations[2].push_back(BEQ);
+        count_units++;
     }
     for (int i = 0; i < Num_JALR_RS; i++){
-        reservation_station JALR("JALR" + to_string(i+1), 1,1);
+        reservation_station JALR("JALR" + to_string(i+1), 1,1, count_units);
         Reservation_Stations[3].push_back(JALR);
+        count_units++;
     }
     for (int i = 0; i < Num_ADD_RS; i++){
-        reservation_station ADD("ADD" + to_string(i+1), 1,2);
+        reservation_station ADD("ADD" + to_string(i+1), 1,2, count_units);
         Reservation_Stations[4].push_back(ADD);
+        count_units++;
     }
     for (int i = 0; i < Num_MULL_RS; i++){
-        reservation_station MULL("MULL" + to_string(i+1), 1,6);
+        reservation_station MULL("MULL" + to_string(i+1), 1,6, count_units);
         Reservation_Stations[5].push_back(MULL);
+        count_units++;
     }
 
     //build register status table
@@ -173,7 +180,7 @@ void ISSUE(vector<instruction>& Instructions, vector<vector<reservation_station>
 
                 Reservation_Stations[4][i].busy = true;
         ///////////////////////////////////////////////////////
-                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[4][i].name;
+                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[4][i].num;
                     
                 Reservation_Stations[4][i].instr_num = instr_issue;
                 Instructions[instr_issue].issued = clk;
@@ -198,7 +205,7 @@ void ISSUE(vector<instruction>& Instructions, vector<vector<reservation_station>
 
                 Reservation_Stations[4][i].busy = true;
         ///////////////////////////////////////////////////////
-                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[4][i].name;
+                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[4][i].num;
                     
                 Reservation_Stations[4][i].instr_num = instr_issue;
                 Instructions[instr_issue].issued = clk;
@@ -223,7 +230,7 @@ void ISSUE(vector<instruction>& Instructions, vector<vector<reservation_station>
 
                 Reservation_Stations[4][i].busy = true;
         ///////////////////////////////////////////////////////
-                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[4][i].name;
+                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[4][i].num;
                     
                 Reservation_Stations[4][i].instr_num = instr_issue;
                 Instructions[instr_issue].issued = clk;
@@ -248,7 +255,7 @@ void ISSUE(vector<instruction>& Instructions, vector<vector<reservation_station>
 
                 Reservation_Stations[5][i].busy = true;
         ///////////////////////////////////////////////////////
-                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[5][i].name;
+                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[5][i].num;
                     
                 Reservation_Stations[5][i].instr_num = instr_issue;
                 Instructions[instr_issue].issued = clk;
@@ -275,7 +282,7 @@ void ISSUE(vector<instruction>& Instructions, vector<vector<reservation_station>
 
                 Reservation_Stations[0][i].A = Instructions[instr_issue].imm;
                 Reservation_Stations[0][i].busy = true;
-                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[0][i].name;
+                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[0][i].num;
                 //load store queue
                 Reservation_Stations[0][i].inst = Instructions[instr_issue].inst;
                 LoadStoreQueue.push(Instructions[instr_issue].inst);
@@ -311,7 +318,7 @@ void ISSUE(vector<instruction>& Instructions, vector<vector<reservation_station>
 
                 Reservation_Stations[1][i].A = Instructions[instr_issue].imm;
                 Reservation_Stations[1][i].busy = true;
-                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[1][i].name;
+                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[1][i].num;
 
                 //load store queue
                 Reservation_Stations[1][i].inst = Instructions[instr_issue].inst;
@@ -349,7 +356,7 @@ void ISSUE(vector<instruction>& Instructions, vector<vector<reservation_station>
 
                 Reservation_Stations[2][i].A = Instructions[instr_issue].imm;
                 Reservation_Stations[2][i].busy = true;
-                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[2][i].name;
+                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[2][i].num;
 
                 Reservation_Stations[2][i].instr_num = instr_issue;
                 Instructions[instr_issue].issued = clk;
@@ -374,7 +381,7 @@ void ISSUE(vector<instruction>& Instructions, vector<vector<reservation_station>
 
                 Reservation_Stations[3][i].busy = true;
         ///////////////////////////////////////////////////////
-                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[3][i].name;
+                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[3][i].num;
                     
                 Reservation_Stations[3][i].instr_num = instr_issue;
                 Instructions[instr_issue].issued = clk;
@@ -393,7 +400,7 @@ void ISSUE(vector<instruction>& Instructions, vector<vector<reservation_station>
                
                 Reservation_Stations[3][i].busy = true;
         ///////////////////////////////////////////////////////
-                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[3][i].name;
+                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[3][i].num;
                     
                 Reservation_Stations[3][i].instr_num = instr_issue;
                 Instructions[instr_issue].issued = clk;
@@ -522,16 +529,16 @@ void WRITE (vector<instruction>& Instructions, vector<vector<reservation_station
 
         if(Op == "ADD") {
             for (int i = 1; i < Num_REG; i++) {
-                if (Registers_Status[i].Qi == writebacks[0].name) {
+                if (Registers_Status[i].Qi == writebacks[0].num) {
                     Registers_Status[i].Qi = 0;
                 }
             }
             for (int i = 0; i < Reservation_Stations.size(); i++) {
                 for (int j = 0; j < Reservation_Stations[i].size(); j++) {
-                    if (Reservation_Stations[i][j].Qj == writebacks[0].name) {
+                    if (Reservation_Stations[i][j].Qj == writebacks[0].num) {
                         Reservation_Stations[i][j].Qj = 0;
                     }
-                    if (Reservation_Stations[i][j].Qk == writebacks[0].name) {
+                    if (Reservation_Stations[i][j].Qk == writebacks[0].num) {
                         Reservation_Stations[i][j].Qk = 0;
                     }
                     if(Reservation_Stations[i][j].name == writebacks[0].name)
@@ -543,16 +550,16 @@ void WRITE (vector<instruction>& Instructions, vector<vector<reservation_station
 
         if(Op == "NEG") {
             for (int i = 1; i < Num_REG; i++) {
-                if (Registers_Status[i].Qi == writebacks[0].name) {
+                if (Registers_Status[i].Qi == writebacks[0].num) {
                     Registers_Status[i].Qi = 0;
                 }
             }
             for (int i = 0; i < Reservation_Stations.size(); i++) {
                 for (int j = 0; j < Reservation_Stations[i].size(); j++) {
-                    if (Reservation_Stations[i][j].Qj == writebacks[0].name) {
+                    if (Reservation_Stations[i][j].Qj == writebacks[0].num) {
                         Reservation_Stations[i][j].Qj = 0;
                     }
-                    if (Reservation_Stations[i][j].Qk == writebacks[0].name) {
+                    if (Reservation_Stations[i][j].Qk == writebacks[0].num) {
                         Reservation_Stations[i][j].Qk = 0;
                     }
                     if(Reservation_Stations[i][j].name == writebacks[0].name)
@@ -564,16 +571,16 @@ void WRITE (vector<instruction>& Instructions, vector<vector<reservation_station
 
         if(Op == "ADDI") {
             for (int i = 1; i < Num_REG; i++) {
-                if (Registers_Status[i].Qi == writebacks[0].name) {
+                if (Registers_Status[i].Qi == writebacks[0].num) {
                     Registers_Status[i].Qi = 0;
                 }
             }
             for (int i = 0; i < Reservation_Stations.size(); i++) {
                 for (int j = 0; j < Reservation_Stations[i].size(); j++) {
-                    if (Reservation_Stations[i][j].Qj == writebacks[0].name) {
+                    if (Reservation_Stations[i][j].Qj == writebacks[0].num) {
                         Reservation_Stations[i][j].Qj = 0;
                     }
-                    if (Reservation_Stations[i][j].Qk == writebacks[0].name) {
+                    if (Reservation_Stations[i][j].Qk == writebacks[0].num) {
                         Reservation_Stations[i][j].Qk = 0;
                     }
                     if(Reservation_Stations[i][j].name == writebacks[0].name)
@@ -585,58 +592,60 @@ void WRITE (vector<instruction>& Instructions, vector<vector<reservation_station
 
         if(Op == "MULL") {
             for (int i = 1; i < Num_REG; i++) {
-                if (Registers_Status[i].Qi == writebacks[0].name) {
+                if (Registers_Status[i].Qi == writebacks[0].num) {
                     Registers_Status[i].Qi = 0;
                 }
             }
             for (int i = 0; i < Reservation_Stations.size(); i++) {
                 for (int j = 0; j < Reservation_Stations[i].size(); j++) {
-                    if (Reservation_Stations[i][j].Qj == writebacks[0].name) {
+                    if (Reservation_Stations[i][j].Qj == writebacks[0].num) {
                         Reservation_Stations[i][j].Qj = 0;
                     }
-                    if (Reservation_Stations[i][j].Qk == writebacks[0].name) {
+                    if (Reservation_Stations[i][j].Qk == writebacks[0].num) {
                         Reservation_Stations[i][j].Qk = 0;
                     }
                     if(Reservation_Stations[i][j].name == writebacks[0].name)
                         Reservation_Stations[i][j].notBusy();
                 }
             }
-            Regs[Instructions[inst].rd] = mull(Regs[Instructions[inst].rs1], Regs[Instructions[inst].rs2]);
+            //Regs[Instructions[inst].rd] = mull(Regs[Instructions[inst].rs1], Regs[Instructions[inst].rs2]);
+            Regs[Instructions[inst].rd] = Regs[Instructions[inst].rs1]* Regs[Instructions[inst].rs2];
         }
 
         if(Op == "MULH") {
             for (int i = 1; i < Num_REG; i++) {
-                if (Registers_Status[i].Qi == writebacks[0].name) {
+                if (Registers_Status[i].Qi == writebacks[0].num) {
                     Registers_Status[i].Qi = 0;
                 }
             }
             for (int i = 0; i < Reservation_Stations.size(); i++) {
                 for (int j = 0; j < Reservation_Stations[i].size(); j++) {
-                    if (Reservation_Stations[i][j].Qj == writebacks[0].name) {
+                    if (Reservation_Stations[i][j].Qj == writebacks[0].num) {
                         Reservation_Stations[i][j].Qj = 0;
                     }
-                    if (Reservation_Stations[i][j].Qk == writebacks[0].name) {
+                    if (Reservation_Stations[i][j].Qk == writebacks[0].num) {
                         Reservation_Stations[i][j].Qk = 0;
                     }
                     if(Reservation_Stations[i][j].name == writebacks[0].name)
                         Reservation_Stations[i][j].notBusy();
                 }
             }
-            Regs[Instructions[inst].rd] = mulh(Regs[Instructions[inst].rs1], Regs[Instructions[inst].rs2]);
+            //Regs[Instructions[inst].rd] = mulh(Regs[Instructions[inst].rs1], Regs[Instructions[inst].rs2]);
+            Regs[Instructions[inst].rd] = Regs[Instructions[inst].rs1]* Regs[Instructions[inst].rs2];
         }
 
         if(Op == "LW") {
             for (int i = 1; i < Num_REG; i++) {
-                if (Registers_Status[i].Qi == writebacks[0].name) {
+                if (Registers_Status[i].Qi == writebacks[0].num) {
                     Registers_Status[i].Qi = 0;
                 }
             }
             for (int i = 0; i < Reservation_Stations.size(); i++) {
                 for (int j = 0; j < Reservation_Stations[i].size(); j++) {
-                    if (Reservation_Stations[i][j].Qj == writebacks[0].name) {
+                    if (Reservation_Stations[i][j].Qj == writebacks[0].num) {
                         Reservation_Stations[i][j].Qj = 0;
                     }
-                    if (Reservation_Stations[i][j].Qk == writebacks[0].name) {
+                    if (Reservation_Stations[i][j].Qk == writebacks[0].num) {
                         Reservation_Stations[i][j].Qk = 0;
                     }
                     if(Reservation_Stations[i][j].name == writebacks[0].name)

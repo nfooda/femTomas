@@ -2,6 +2,7 @@
 
 class reservation_station {
     public:
+        int num;
         string name;
         bool busy;
         string Op;
@@ -13,6 +14,7 @@ class reservation_station {
         int instr_num;
     
     reservation_station() {
+        num = 0;
         name = "";
         busy = false;
         Op = "";
@@ -28,7 +30,8 @@ class reservation_station {
         instr_num = -1;
     }
 
-    reservation_station(string Name, int Issue_Lat, int Execute_Lat) {
+    reservation_station(string Name, int Issue_Lat, int Execute_Lat, int Num) {
+        num = Num;
         name = Name;
         busy = false;
         Op = "";
@@ -42,6 +45,7 @@ class reservation_station {
         execute_lat = Execute_Lat;
         inst = "";
         instr_num = -1;
+
     }
 
 
