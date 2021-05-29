@@ -33,11 +33,11 @@ bool RET_flag = false;
 int before_jump_address;
 
 //main functions
-void issue();
-void execute();
-void write();
+void issue(vector<instruction>& Instructions, vector<vector<reservation_station>>& Reservation_Stations, vector<Register>& Registers_Status, vector<int>& Regs, queue<string>& LoadStoreQueue);
+void execute(vector<instruction>& Instructions, vector<vector<reservation_station>>& Reservation_Stations, vector<Register>& Registers_Status, vector<int>& Regs, queue<string>& LoadStoreQueue);
+void write(vector<instruction>& Instructions, vector<vector<reservation_station>>& Reservation_Stations, vector<Register>& Registers_Status, vector<int>& Regs, queue<string>& LoadStoreQueue);
 
-void print();
+void print(vector<instruction>& Instructions);
 
 CDB result;
 
@@ -114,6 +114,26 @@ main () {
 
     queue<string> LoadStoreQueue;
 
+
+    do{
+        clk++; 
+
+        ISSUE(Instructions,Reservation_Stations,Registers_Status,Regs, LoadStoreQueue);
+		EXECUTE(Instructions,Reservation_Stations,Registers_Status,Regs, LoadStoreQueue);
+		WRITE(Instructions,Reservation_Stations,Registers_Status,Regs, LoadStoreQueue);
+
+       
+        done = false;
+        if(num_writbacks == Instructions.size())
+            done = true;
+        cout << endl;
+	}while(!done);
+
+    print (Instructions);
+
+
+    return 0;
+
 }
 
 /*
@@ -166,10 +186,85 @@ void ISSUE(vector<instruction>& Instructions, vector<vector<reservation_station>
         }
     }
 
+    if(Op == "ADDI"){ //4
+        for (int i = 0; i < Reservation_Stations[4].size(); i++) {
+            if (Reservation_Stations[4][i].busy == false) {
+                if (Registers_Status[Instructions[instr_issue].rs1].Qi != 0) //waiting for reservation station (rs1 not ready)
+                    Reservation_Stations[4][i].Qj = Registers_Status[Instructions[instr_issue].rs1].Qi;
+                else {
+                    Reservation_Stations[4][i].Vj = Regs[Instructions[instr_issue].rs1];
+                    Reservation_Stations[4][i].Qj = 0;
+                }
+
+                Reservation_Stations[4][i].busy = true;
+        ///////////////////////////////////////////////////////
+                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[4][i].name;
+                    
+                Reservation_Stations[4][i].instr_num = instr_issue;
+                Instructions[instr_issue].issued = clk;
+                Instructions[instr_issue].issue_lat--;
+
+                Instructions[instr_issue].status = "i";
+                instr_issue++;
+                break;
+            }
+        }
+    }
+
+    if(Op == "NEG"){ //4
+        for (int i = 0; i < Reservation_Stations[4].size(); i++) {
+            if (Reservation_Stations[4][i].busy == false) {
+                if (Registers_Status[Instructions[instr_issue].rs1].Qi != 0) //waiting for reservation station (rs1 not ready)
+                    Reservation_Stations[4][i].Qj = Registers_Status[Instructions[instr_issue].rs1].Qi;
+                else {
+                    Reservation_Stations[4][i].Vj = Regs[Instructions[instr_issue].rs1];
+                    Reservation_Stations[4][i].Qj = 0;
+                }
+
+                Reservation_Stations[4][i].busy = true;
+        ///////////////////////////////////////////////////////
+                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[4][i].name;
+                    
+                Reservation_Stations[4][i].instr_num = instr_issue;
+                Instructions[instr_issue].issued = clk;
+                Instructions[instr_issue].issue_lat--;
+
+                Instructions[instr_issue].status = "i";
+                instr_issue++;
+                break;
+            }
+        }
+    }
+
+    if(Op == "MULL" || Op == "MULH"){ //5
+        for (int i = 0; i < Reservation_Stations[5].size(); i++) {
+            if (Reservation_Stations[5][i].busy == false) {
+                if (Registers_Status[Instructions[instr_issue].rs1].Qi != 0) //waiting for reservation station (rs1 not ready)
+                    Reservation_Stations[5][i].Qj = Registers_Status[Instructions[instr_issue].rs1].Qi;
+                else {
+                    Reservation_Stations[5][i].Vj = Regs[Instructions[instr_issue].rs1];
+                    Reservation_Stations[5][i].Qj = 0;
+                }
+
+                Reservation_Stations[5][i].busy = true;
+        ///////////////////////////////////////////////////////
+                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[5][i].name;
+                    
+                Reservation_Stations[5][i].instr_num = instr_issue;
+                Instructions[instr_issue].issued = clk;
+                Instructions[instr_issue].issue_lat--;
+
+                Instructions[instr_issue].status = "i";
+                instr_issue++;
+                break;
+            }
+        }
+    }
+
     // LOAD
     if(Op == "LW"){ //0
         for (int i = 0; i < Reservation_Stations[0].size(); i++) {
-            if (Reservation_Stations[4][i].busy == false) {
+            if (Reservation_Stations[0][i].busy == false) {
 
                 if(Registers_Status[Instructions[instr_issue].rs1].Qi != 0 ) //waiting for reservation station (rs1 not ready)
                     Reservation_Stations[0][i].Qj = Registers_Status[Instructions[instr_issue].rs1].Qi;
@@ -235,28 +330,72 @@ void ISSUE(vector<instruction>& Instructions, vector<vector<reservation_station>
 
     //BEQ
     if(Op == "BEQ"){ //2
-        for (int i = 0; i < Reservation_Stations[1].size(); i++) {
-            if (Reservation_Stations[1][i].busy == false) {
+        for (int i = 0; i < Reservation_Stations[2].size(); i++) {
+            if (Reservation_Stations[2][i].busy == false) {
 
                 if(Registers_Status[Instructions[instr_issue].rs1].Qi != 0 ) //waiting for reservation station (rs1 not ready)
-                    Reservation_Stations[1][i].Qj = Registers_Status[Instructions[instr_issue].rs1].Qi;
+                    Reservation_Stations[2][i].Qj = Registers_Status[Instructions[instr_issue].rs1].Qi;
                 else {
-                    Reservation_Stations[1][i].Vj = Regs[Instructions[instr_issue].rs1];
-                    Reservation_Stations[1][i].Qj = 0;
+                    Reservation_Stations[2][i].Vj = Regs[Instructions[instr_issue].rs1];
+                    Reservation_Stations[2][i].Qj = 0;
                 }
 
                 if(Registers_Status[Instructions[instr_issue].rs2].Qi != 0 ) //waiting for reservation station (rs1 not ready)
-                    Reservation_Stations[1][i].Qk = Registers_Status[Instructions[instr_issue].rs2].Qi;
+                    Reservation_Stations[2][i].Qk = Registers_Status[Instructions[instr_issue].rs2].Qi;
                 else {
-                    Reservation_Stations[1][i].Vk = Regs[Instructions[instr_issue].rs2];
-                    Reservation_Stations[1][i].Qk = 0;
+                    Reservation_Stations[2][i].Vk = Regs[Instructions[instr_issue].rs2];
+                    Reservation_Stations[2][i].Qk = 0;
                 }
 
-                Reservation_Stations[1][i].A = Instructions[instr_issue].imm;
-                Reservation_Stations[1][i].busy = true;
-                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[1][i].name;
+                Reservation_Stations[2][i].A = Instructions[instr_issue].imm;
+                Reservation_Stations[2][i].busy = true;
+                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[2][i].name;
 
-                Reservation_Stations[1][i].instr_num = instr_issue;
+                Reservation_Stations[2][i].instr_num = instr_issue;
+                Instructions[instr_issue].issued = clk;
+                Instructions[instr_issue].issue_lat--;
+
+                Instructions[instr_issue].status = "i";
+                instr_issue++;
+                break;
+            }
+        }
+    }
+
+    if(Op == "JALR"){ //3
+        for (int i = 0; i < Reservation_Stations[3].size(); i++) {
+            if (Reservation_Stations[3][i].busy == false) {
+                if (Registers_Status[Instructions[instr_issue].rs1].Qi != 0) //waiting for reservation station (rs1 not ready)
+                    Reservation_Stations[3][i].Qj = Registers_Status[Instructions[instr_issue].rs1].Qi;
+                else {
+                    Reservation_Stations[3][i].Vj = Regs[Instructions[instr_issue].rs1];
+                    Reservation_Stations[3][i].Qj = 0;
+                }
+
+                Reservation_Stations[3][i].busy = true;
+        ///////////////////////////////////////////////////////
+                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[3][i].name;
+                    
+                Reservation_Stations[3][i].instr_num = instr_issue;
+                Instructions[instr_issue].issued = clk;
+                Instructions[instr_issue].issue_lat--;
+
+                Instructions[instr_issue].status = "i";
+                instr_issue++;
+                break;
+            }
+        }
+    }
+
+    if(Op == "RET"){ //3
+        for (int i = 0; i < Reservation_Stations[4].size(); i++) {
+            if (Reservation_Stations[3][i].busy == false) {
+               
+                Reservation_Stations[3][i].busy = true;
+        ///////////////////////////////////////////////////////
+                Registers_Status[Instructions[instr_issue].rd].Qi = Reservation_Stations[3][i].name;
+                    
+                Reservation_Stations[3][i].instr_num = instr_issue;
                 Instructions[instr_issue].issued = clk;
                 Instructions[instr_issue].issue_lat--;
 
@@ -570,4 +709,16 @@ void WRITE (vector<instruction>& Instructions, vector<vector<reservation_station
         writebacks.erase(writebacks.begin());
     }
 }
- //--------------------------------------------------------------------------------------------
+
+
+void print (vector<instruction>& Instructions) {
+    cout << setw(25)<<"Instruction" << setw(15)<<"issued"<<setw(15)<<"execution start" << setw(17)<<"execution finish"<<setw(15)<<"writeback"<<endl;
+    for(int i = 0; i < Instructions.size(); i++){
+        cout << setw(25)<<Instructions[i].inst << setw(15)<<Instructions[i].issued<<setw(15)<< Instructions[i].execution_started << setw(17)<<Instructions[i].execution_finished<<setw(15)<<Instructions[i].written<<endl;
+    }
+
+    cout <<endl;
+    cout << "Total execution time: "<<clk<<" clock cycles"<<endl;
+    cout << "IPC: "<<Instructions.size()/clk<<endl;
+    cout << "The branch misprediction percentage: "<<mispredection/branch_num*100<<" %"<<endl;
+}
