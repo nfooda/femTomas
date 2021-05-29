@@ -50,6 +50,19 @@ class reservation_station {
     {
         return instr_num < b.instr_num;
     }
+
+    void notBusy (){
+        busy = false;
+        Op = "";
+        Vj = 0;
+        Vk = 0;
+        Qj = 1;
+        Qk = 1;
+        A = 0;
+        PC = 0;
+        inst = "";
+        instr_num = -1;
+    }
 };
 
 /*
